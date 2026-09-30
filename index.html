@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aniruddh Rajagopal</title>
+<meta name="description" content="ML engineer portfolio covering recommendation systems, ranking, and agentic AI work.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%AF</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --bg: #F4F5F0;
+    --surface: #FFFFFF;
+    --surface-2: #EAECE4;
+    --text: #14171A;
+    --text-muted: #5B645F;
+    --text-faint: #8B948C;
+    --accent: #1F6E4A;
+    --accent-strong: #16542F;
+    --accent-soft: #DCEBDF;
+    --secondary: #3A5A8C;
+    --secondary-soft: #E3E9F3;
+    --border: #D8DAD1;
+    --border-strong: #B9BDB2;
+    --node: rgba(31,110,74,0.55);
+    --edge: rgba(31,110,74,0.16);
+    --shadow: 0 1px 2px rgba(20,23,26,0.04), 0 8px 24px rgba(20,23,26,0.05);
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    --font-sans: 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0D1012;
+      --surface: #14181A;
+      --surface-2: #1B2020;
+      --text: #E8EBE6;
+      --text-muted: #939C93;
+      --text-faint: #626B62;
+      --accent: #5FD08A;
+      --accent-strong: #86E0A8;
+      --accent-soft: #16301F;
+      --secondary: #8FB0F0;
+      --secondary-soft: #1B2740;
+      --border: #262B27;
+      --border-strong: #3A413A;
+      --node: rgba(95,208,138,0.55);
+      --edge: rgba(95,208,138,0.14);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0D1012;
+    --surface: #14181A;
+    --surface-2: #1B2020;
+    --text: #E8EBE6;
+    --text-muted: #939C93;
+    --text-faint: #626B62;
+    --accent: #5FD08A;
+    --accent-strong: #86E0A8;
+    --accent-soft: #16301F;
+    --secondary: #8FB0F0;
+    --secondary-soft: #1B2740;
+    --border: #262B27;
+    --border-strong: #3A413A;
+    --node: rgba(95,208,138,0.55);
+    --edge: rgba(95,208,138,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  h1,h2,h3{text-wrap:balance; margin:0;}
+  ::selection{background:var(--accent-soft); color:var(--accent-strong);}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
+  .mono{font-family:var(--font-mono);}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem;
+    padding:0.9rem clamp(1.25rem, 4vw, 3rem);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-id{
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:0.9rem;
+    letter-spacing:0.02em;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .topbar-id .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+    flex:none;
+  }
+  .topbar nav{
+    display:flex; gap:clamp(0.75rem,2vw,1.5rem);
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    letter-spacing:0.04em;
+  }
+  .topbar nav a{
+    text-decoration:none;
+    color:var(--text-muted);
+    padding:0.3rem 0.1rem;
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .topbar nav a:hover{color:var(--text); border-color:var(--border-strong);}
+
+  /* ============ SHELL ============ */
+  .shell{max-width:920px; margin:0 auto; padding:0 clamp(1.25rem,4vw,3rem);}
+
+  /* ============ HERO ============ */
+  .hero{position:relative; overflow:hidden; border-bottom:1px solid var(--border);}
+  .hero-inner{position:relative; z-index:2; padding:clamp(3rem,8vw,5.5rem) 0 clamp(2.5rem,6vw,4rem);}
+  #graph{position:absolute; inset:0; z-index:1; width:100%; height:100%; display:block; opacity:0.7;}
+  .hero-status{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em;
+    color:var(--accent-strong); background:var(--accent-soft);
+    border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    padding:0.32rem 0.7rem; border-radius:3px; margin-bottom:1.5rem;
+    text-transform:uppercase;
+  }
+  .hero-status .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .hero h1{
+    font-family:var(--font-mono);
+    font-weight:800;
+    font-size:clamp(2.1rem, 6vw, 3.6rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    max-width:14ch;
+  }
+  .hero .role{
+    margin-top:1rem;
+    font-size:clamp(1.05rem,2.4vw,1.3rem);
+    color:var(--text-muted);
+    font-weight:500;
+    max-width:38ch;
+  }
+  .hero .role strong{color:var(--text); font-weight:600;}
+  .hero p.summary{
+    margin-top:1.4rem;
+    max-width:58ch;
+    font-size:1.02rem;
+    color:var(--text-muted);
+  }
+  .hero-meta{
+    margin-top:2.2rem;
+    display:flex; flex-wrap:wrap; gap:0.6rem 1rem;
+  }
+  .hero-meta a, .hero-meta span{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--text-muted);
+    display:inline-flex; align-items:center; gap:0.4rem;
+  }
+  .hero-meta a{
+    text-decoration:none;
+    padding:0.45rem 0.8rem;
+    border:1px solid var(--border-strong);
+    border-radius:3px;
+    background:var(--surface);
+    transition:border-color .15s ease, color .15s ease, transform .15s ease;
+  }
+  .hero-meta a:hover{border-color:var(--accent); color:var(--accent-strong); transform:translateY(-1px);}
+  .hero-meta span{padding:0.45rem 0.2rem; color:var(--text-faint);}
+
+  /* ============ STATS STRIP ============ */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px,1fr));
+    border-bottom:1px solid var(--border);
+  }
+  .stat{
+    padding:1.4rem clamp(1.25rem,4vw,3rem);
+    border-right:1px solid var(--border);
+    border-top:1px solid var(--border);
+  }
+  .stat:nth-last-child(1){border-right:none;}
+  .stat .num{
+    font-family:var(--font-mono); font-weight:700;
+    font-size:1.5rem; color:var(--accent-strong);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .label{
+    margin-top:0.3rem;
+    font-size:0.8rem;
+    color:var(--text-muted);
+    line-height:1.35;
+  }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section.block{padding:clamp(3rem,7vw,4.5rem) 0;}
+  section.block + section.block{border-top:1px solid var(--border);}
+  .block-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:1rem;
+    margin-bottom:2.2rem;
+  }
+  .block-head h2{
+    font-family:var(--font-mono);
+    font-size:1.5rem;
+    font-weight:700;
+  }
+  .block-head .count{font-family:var(--font-mono); font-size:0.78rem; color:var(--text-faint);}
+
+  /* ============ EXPERIENCE (ranked timeline) ============ */
+  .timeline{position:relative;}
+  .timeline::before{
+    content:"";
+    position:absolute; left:0; top:0.5rem; bottom:0.5rem; width:1px;
+    background:linear-gradient(var(--border-strong), var(--border));
+  }
+  .role-card{position:relative; padding-left:2rem; margin-bottom:2.6rem;}
+  .role-card:last-child{margin-bottom:0;}
+  .role-card::before{
+    content:"";
+    position:absolute; left:-3.5px; top:0.45rem;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px var(--bg), 0 0 0 5px var(--border-strong);
+  }
+  .role-top{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:0.5rem 1rem;}
+  .role-title{font-size:1.12rem; font-weight:700;}
+  .role-org{color:var(--accent-strong); font-weight:600;}
+  .role-when{font-family:var(--font-mono); font-size:0.78rem; color:var(--text-faint); white-space:nowrap;}
+  .role-loc{font-size:0.85rem; color:var(--text-muted); margin-top:0.15rem;}
+  .role-note{
+    margin-top:0.6rem; font-size:0.92rem; color:var(--text-muted);
+    font-style:italic; max-width:60ch;
+  }
+  .role-list{margin:0.9rem 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:0.55rem;}
+  .role-list li{
+    position:relative; padding-left:1.1rem; font-size:0.95rem; color:var(--text);
+  }
+  .role-list li::before{
+    content:"›"; position:absolute; left:0; color:var(--accent); font-weight:700;
+  }
+
+  /* ============ PROJECTS ============ */
+  .projects{display:flex; flex-direction:column; gap:1.1rem;}
+  .project{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:1.5rem 1.6rem;
+    box-shadow:var(--shadow);
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .project:hover{border-color:var(--border-strong); transform:translateY(-2px);}
+  .project-top{display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.6rem 1rem; align-items:baseline;}
+  .project-name{font-size:1.08rem; font-weight:700;}
+  .project-name a{text-decoration:none; border-bottom:1px solid var(--border-strong);}
+  .project-name a:hover{border-color:var(--accent); color:var(--accent-strong);}
+  .project-venue{font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;}
+  .project-desc{margin-top:0.7rem; color:var(--text-muted); font-size:0.94rem; max-width:66ch;}
+  .project-readout{
+    margin-top:1rem;
+    display:flex; flex-wrap:wrap; gap:0.5rem;
+    font-family:var(--font-mono); font-size:0.72rem;
+  }
+  .project-readout span{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    padding:0.28rem 0.55rem;
+    border-radius:3px;
+  }
+  .project-stack{margin-top:0.85rem; font-size:0.82rem; color:var(--text-faint);}
+  .project-stack b{color:var(--text-muted); font-weight:600;}
+
+  /* screenshot frames -- real captures from running the repos locally */
+  .shots{margin-top:1.2rem; display:grid; gap:0.7rem;}
+  .shots.pair{grid-template-columns:1fr 1fr;}
+  @media (max-width:640px){.shots.pair{grid-template-columns:1fr;}}
+  .shot-frame{
+    border-radius:7px; overflow:hidden;
+    border:1px solid var(--border);
+    background:#0b0b0b;
+    box-shadow:var(--shadow);
+  }
+  .shot-chrome{
+    display:flex; align-items:center; gap:5px;
+    padding:0.5rem 0.65rem;
+    background:#151515;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .shot-chrome i{width:8px; height:8px; border-radius:50%; display:block;}
+  .shot-chrome i:nth-child(1){background:#ff5f57;}
+  .shot-chrome i:nth-child(2){background:#febc2e;}
+  .shot-chrome i:nth-child(3){background:#28c840;}
+  .shot-frame img{display:block; width:100%; height:auto;}
+  .shot-caption{
+    margin-top:0.5rem;
+    font-family:var(--font-mono); font-size:0.7rem;
+    color:var(--text-faint); letter-spacing:0.02em;
+  }
+  .shot-caption b{color:var(--text-muted); font-weight:600;}
+
+  /* terminal block -- for API-only projects with no UI to screenshot */
+  .terminal{
+    margin-top:1.2rem; border-radius:7px; overflow:hidden;
+    border:1px solid var(--border); background:#0b0b0b; box-shadow:var(--shadow);
+  }
+  .terminal-body{
+    padding:1rem 1.1rem; font-family:var(--font-mono); font-size:0.78rem; line-height:1.7;
+    overflow-x:auto; white-space:pre;
+  }
+  .terminal-body .prompt{color:#6b7280;}
+  .terminal-body .cmd{color:#e8eaed;}
+  .terminal-body .resp{color:#5fd08a;}
+  .terminal-body .gap{display:block; height:0.6rem;}
+
+  /* now building */
+  .building{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;}
+  @media (max-width:640px){.building{grid-template-columns:1fr;}}
+  .building .project{background:var(--surface-2); border-style:dashed;}
+
+  /* other repos strip */
+  .repo-strip{margin-top:1.5rem; display:flex; flex-wrap:wrap; gap:0.55rem;}
+  .repo-strip a{
+    font-family:var(--font-mono); font-size:0.76rem;
+    text-decoration:none; color:var(--text-muted);
+    border:1px solid var(--border); border-radius:999px;
+    padding:0.38rem 0.85rem;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .repo-strip a:hover{border-color:var(--accent); color:var(--accent-strong);}
+
+  /* ============ EDUCATION ============ */
+  .edu-card{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem 2rem;
+    border:1px solid var(--border); border-radius:6px;
+    padding:1.5rem 1.7rem; background:var(--surface); box-shadow:var(--shadow);
+  }
+  .edu-card .role-title{font-size:1.05rem;}
+  .coursework{margin-top:0.6rem; font-size:0.85rem; color:var(--text-muted);}
+  .coursework b{color:var(--text-faint); font-weight:600;}
+
+  /* ============ SKILLS ============ */
+  .skill-groups{display:flex; flex-direction:column; gap:1.4rem;}
+  .skill-group .eyebrow{margin-bottom:0.7rem; display:block;}
+  .tags{display:flex; flex-wrap:wrap; gap:0.5rem;}
+  .tags span{
+    font-size:0.84rem;
+    padding:0.35rem 0.75rem;
+    border-radius:4px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+
+  /* ============ FOOTER / CONTACT ============ */
+  footer{
+    padding:clamp(3rem,7vw,4.5rem) 0 clamp(2.5rem,6vw,3.5rem);
+    border-top:1px solid var(--border);
+  }
+  footer h2{
+    font-family:var(--font-mono); font-weight:700;
+    font-size:clamp(1.6rem,4vw,2.2rem);
+    max-width:16ch;
+  }
+  footer p{color:var(--text-muted); max-width:52ch; margin-top:0.9rem;}
+  .contact-row{
+    margin-top:2rem; display:flex; flex-wrap:wrap; gap:0.8rem;
+  }
+  .contact-row a{
+    text-decoration:none;
+    font-family:var(--font-mono); font-size:0.86rem;
+    padding:0.65rem 1.1rem; border-radius:4px;
+    display:inline-flex; align-items:center; gap:0.5rem;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .contact-row a.primary{background:var(--accent); color:var(--bg); font-weight:700;}
+  .contact-row a.secondary{border:1px solid var(--border-strong); color:var(--text);}
+  .contact-row a:hover{transform:translateY(-1px);}
+  .foot-meta{
+    margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.6rem;
+    font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * {transition:none !important; animation:none !important;}
+  }
+
+  @media (max-width:560px){
+    .topbar nav{display:none;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(2n){border-right:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-id"><span class="dot"></span>A. RAJAGOPAL</div>
+  <nav>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <canvas id="graph"></canvas>
+  <div class="shell hero-inner">
+    <div class="hero-status"><span class="dot"></span>Open to full-time ML / DS roles</div>
+    <h1>Aniruddh<br>Rajagopal</h1>
+    <p class="role">Machine learning engineer building <strong>recommendation, ranking, and agentic AI systems</strong> — from candidate generation to production monitoring.</p>
+    <p class="summary">5+ years designing, A/B testing, and deploying production recommendation and ranking systems, with recent work in LLMs, RAG, and generative AI. Skilled at moving models from prototype through experimentation to production on behavioral and demographic signals at scale. MS in Data Science, George Washington University (2026).</p>
+    <div class="hero-meta">
+      <a href="mailto:aniruddhrajagopal9@gmail.com">✉ aniruddhrajagopal9@gmail.com</a>
+      <a href="https://www.linkedin.com/in/aniruddhrajagopal/" target="_blank" rel="noopener">in/aniruddhrajagopal</a>
+      <a href="https://github.com/aniruddh996" target="_blank" rel="noopener">github.com/aniruddh996</a>
+      <span>Washington, DC — open to relocation</span>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num">5+ yrs</div><div class="label">production ML experience</div></div>
+  <div class="stat"><div class="num">98%</div><div class="label">accuracy classifying 1M+ emails</div></div>
+  <div class="stat"><div class="num">10,000+</div><div class="label">users in platform's first year</div></div>
+  <div class="stat"><div class="num">50K+</div><div class="label">products in real-time discovery pipeline</div></div>
+  <div class="stat"><div class="num">12</div><div class="label">engineers led as technical lead</div></div>
+  <div class="stat"><div class="num">20+</div><div class="label">interns mentored</div></div>
+</div>
+
+<main class="shell">
+
+  <section class="block" id="experience">
+    <div class="block-head">
+      <h2>Experience</h2>
+      <span class="count mono">2019 — 2026</span>
+    </div>
+    <div class="timeline">
+
+      <div class="role-card">
+        <div class="role-top">
+          <div><span class="role-title">Machine Learning Software Engineer</span> <span class="mono">·</span> <span class="role-org">Techminds Group LLC</span></div>
+          <div class="role-when">MAR 2026 – MAY 2026</div>
+        </div>
+        <div class="role-loc">Plainsboro, NJ · Internship</div>
+        <p class="role-note">Returned to Techminds Group — parent company of SyenApp, where I'd spent five years — for a graduate internship.</p>
+        <ul class="role-list">
+          <li>Built a personalized e-commerce recommendation engine using LLMs (Groq) and retrieval-augmented generation, combining browsing history, brand preferences, and purchase behavior with candidate filtering and re-ranking.</li>
+          <li>Engineered a real-time trending-product discovery pipeline surfacing 50K+ products on the homepage via LLM APIs, contributing to higher homepage click-through.</li>
+          <li>Prototyped multi-agent workflows (Claude) to automate customer-support tasks such as retrieving partner offers and extracting product recommendations, reducing manual effort.</li>
+          <li>Built AI-assisted automation for repetitive ML workflows, streamlining product-classification tasks across key product surfaces.</li>
+        </ul>
+      </div>
+
+      <div class="role-card">
+        <div class="role-top">
+          <div><span class="role-title">Senior Machine Learning Engineer</span> <span class="mono">·</span> <span class="role-org">SyenApp (Techminds Group LLC)</span></div>
+          <div class="role-when">AUG 2019 – AUG 2024</div>
+        </div>
+        <div class="role-loc">Chennai, India</div>
+        <ul class="role-list">
+          <li>Designed and A/B tested personalization and ranking models in Python (scikit-learn) using a hybrid approach — content-based, demographic, and complementary filtering — later extended to a deep learning model, on behavioral signals stored in MongoDB and Elasticsearch; drove a strong lift in user engagement.</li>
+          <li>Built the experimentation, model-drift monitoring, and automated retraining framework that sustained recommendation quality in production.</li>
+          <li>Served as technical lead for a 12-person cross-functional product team (Python, mobile, UI/UX, QA) while owning ML end-to-end — data ingestion, model serving (AWS Lambda, API Gateway), API integration — as the platform grew from launch to 10,000+ users in its first year.</li>
+          <li>Developed a self-learning NLP email-tagging system (SVC, PyTorch) reaching ~98% classification accuracy on 1M+ emails, sharply reducing manual triage.</li>
+          <li>Built real-time analytics dashboards (Elasticsearch, Plotly) that surfaced purchasing trends and informed product decisions; mentored 20+ interns and established model-monitoring standards adopted across engineering.</li>
+          <li>Deployed and maintained ML services on AWS (Lambda, API Gateway, S3, IAM), later migrating core infrastructure to GCP to improve scalability and reduce operational overhead.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="block" id="projects">
+    <div class="block-head">
+      <h2>Projects</h2>
+      <span class="count mono">6 flagship</span>
+    </div>
+
+    <div class="projects">
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/Hire.Ai" target="_blank" rel="noopener">hire.ai — Multi-Agent AI Hiring Platform</a></div>
+          <div class="project-venue">Bitcamp 2026 · UMD Hackathon</div>
+        </div>
+        <p class="project-desc">Co-built a multi-agent hiring platform evaluating candidates across resumes, code, and live interviews — generating evidence-based match scores and skill-gap analysis, delivered through a recruiter-facing interface.</p>
+        <div class="project-readout">
+          <span>24H BUILD</span>
+          <span>34+ DEVPOST LIKES</span>
+          <span>APR 2026</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> Gemini 2.5 Flash · LLaMA 3.3 (Groq) · GitHub API · Whisper · Streamlit · MongoDB · bcrypt</div>
+        <div class="shots">
+          <div class="shot-frame">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/hireai-hero.jpg" alt="hire.ai landing screen" loading="lazy">
+          </div>
+        </div>
+        <div class="shots pair">
+          <div class="shot-frame">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/hireai-employer-auth.jpg" alt="hire.ai employer portal sign-in" loading="lazy">
+          </div>
+          <div class="shot-frame">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/hireai-candidate-auth.jpg" alt="hire.ai candidate portal sign-in" loading="lazy">
+          </div>
+        </div>
+        <div class="shot-caption">Live captures — running the app locally from the repo, employer and candidate portals.</div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/aesthetic-property-analysis" target="_blank" rel="noopener">Visual Predictors of Urban Aesthetic Attraction</a></div>
+          <div class="project-venue">GWU Capstone</div>
+        </div>
+        <p class="project-desc">A theory-driven framework using LLM scoring and segmentation to evaluate urban images against Christopher Alexander's 15 properties of wholeness, applying regression analysis to identify interpretable predictors of human aesthetic ratings.</p>
+        <div class="project-readout">
+          <span>100 IMAGES SCORED</span>
+          <span>15 PROPERTIES</span>
+          <span>JAN 2026</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> Claude (LLM scoring) · SAM · Regression analysis</div>
+        <div class="shots">
+          <div class="shot-frame" style="background:#fff;">
+            <img src="img/aesthetic-scatter.jpg" alt="Scatter plots of Claude aesthetic score vs. human rating, urban and landscape images, with Pearson/Spearman correlations" loading="lazy">
+          </div>
+        </div>
+        <div class="shot-caption">Claude mean score vs. human rating — r=0.61 (urban), r=0.69 (landscape), from the actual capstone analysis.</div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/medbird-multi-agent-hospital-front-desk-system" target="_blank" rel="noopener">MedBird — Multi-Agent Hospital Front-Desk Assistant</a></div>
+          <div class="project-venue">IBM Watson Hackathon</div>
+        </div>
+        <p class="project-desc">A multi-agent GenAI system handling appointment scheduling, patient triage, and doctor-ready summary generation, with automated email notifications end-to-end.</p>
+        <div class="project-readout">
+          <span>3 AGENT ROLES</span>
+          <span>SMTP AUTOMATION</span>
+          <span>SEP 2025</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> watsonx LLMs · LangChain · FastAPI · SMTP</div>
+        <div class="shots">
+          <div class="shot-frame" style="background:#fff;">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/medbird-chat.jpg" alt="MedBird chat assistant triaging a symptom and asking booking details" loading="lazy">
+          </div>
+        </div>
+        <div class="shot-caption">Live capture — the booking assistant running locally, mid-triage.</div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/dermachecker-skin-lesion-classifier" target="_blank" rel="noopener">DermaChecker — Robotic Skin Lesion Classifier</a></div>
+          <div class="project-venue">Personal Project · Revived 2026</div>
+        </div>
+        <p class="project-desc">A DenseNet121 transfer-learning classifier fine-tuned on the HAM10000 dermoscopic dataset. Built a few years ago, then revived: fixed a checkpoint-path bug that had the deployed app crashing on load, rebuilt the lost front end from old screenshots, and — while tracing the training notebook — found and corrected a real label bug where melanoma images had been mapped to the wrong class name.</p>
+        <div class="project-readout">
+          <span>~89% VAL ACCURACY</span>
+          <span>10,015 TRAINING IMAGES</span>
+          <span>7 LESION CLASSES</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> PyTorch · DenseNet121 · Flask · HAM10000</div>
+        <div class="shots">
+          <div class="shot-frame">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/dermachecker-hero.jpg" alt="DermaChecker landing page, recreated from the original lost design" loading="lazy">
+          </div>
+        </div>
+        <div class="shots" style="margin-top:0.7rem;">
+          <div class="shot-frame">
+            <div class="shot-chrome"><i></i><i></i><i></i></div>
+            <img src="img/dermachecker-result.jpg" alt="DermaChecker live prediction result with a top-3 confidence breakdown" loading="lazy">
+          </div>
+        </div>
+        <div class="shot-caption">Live captures — the rebuilt site running locally, model wired end-to-end through the Test &amp; Result panel.</div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/Roman-urdu-Sentiment-Analyzer" target="_blank" rel="noopener">Roman-Urdu Emotion Analyzer</a></div>
+          <div class="project-venue">Personal Project · Revived 2026</div>
+        </div>
+        <p class="project-desc">An SVC + TF-IDF classifier for sentiment in Roman Urdu (Urdu written in Latin script), trained on ~20K labeled comments. The trained model files were never committed to the repo — retrained them from the included dataset, fixed a pandas incompatibility and a broken requirements.txt, and rebuilt the front end.</p>
+        <div class="project-readout">
+          <span>~67% TEST ACCURACY</span>
+          <span>~20K LABELED COMMENTS</span>
+          <span>3-CLASS SVC</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> scikit-learn · TF-IDF · NLTK · Flask</div>
+        <div class="shots pair">
+          <div class="shot-frame">
+            <img src="img/urdu-positive.jpg" alt="Roman-Urdu Emotion Analyzer predicting positive sentiment" loading="lazy">
+          </div>
+          <div class="shot-frame">
+            <img src="img/urdu-negative.jpg" alt="Roman-Urdu Emotion Analyzer predicting negative sentiment" loading="lazy">
+          </div>
+        </div>
+        <div class="shot-caption">Live captures — real predictions from the retrained model, positive and negative examples.</div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <div class="project-name"><a href="https://github.com/aniruddh996/youtube-comment-sentiment-analysis-nlp" target="_blank" rel="noopener">YouTube Comment Sentiment API</a></div>
+          <div class="project-venue">Personal Project · Live on AWS</div>
+        </div>
+        <p class="project-desc">A from-scratch Multinomial Naive Bayes classifier served serverlessly — API Gateway routes to a Lambda that scores YouTube comment sentiment. Didn't need reviving: still live and correct years later.</p>
+        <div class="project-readout">
+          <span>API GATEWAY → LAMBDA</span>
+          <span>NAIVE BAYES FROM SCRATCH</span>
+          <span>STILL LIVE</span>
+        </div>
+        <div class="project-stack"><b>Stack —</b> AWS Lambda · API Gateway · Naive Bayes (from scratch)</div>
+        <div class="terminal">
+          <div class="shot-chrome"><i></i><i></i><i></i></div>
+          <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">curl -X POST .../predict -d '{"comment": "This video is amazing! Loved the editing and pacing."}'</span>
+<span class="resp">{"predicted_sentiment": "positive"}</span><span class="gap"></span><span class="prompt">$</span> <span class="cmd">curl -X POST .../predict -d '{"comment": "This was a complete waste of time, terrible content."}'</span>
+<span class="resp">{"predicted_sentiment": "negative"}</span></div>
+        </div>
+        <div class="shot-caption">Real requests against the live endpoint, run just now.</div>
+      </article>
+
+    </div>
+
+    <div class="block-head" style="margin-top:3rem;">
+      <h2 style="font-size:1.15rem;">Now building</h2>
+      <span class="count mono">in progress</span>
+    </div>
+    <div class="building">
+      <article class="project">
+        <div class="project-name" style="font-size:0.98rem;">LLM-era recommender</div>
+        <p class="project-desc" style="margin-top:0.5rem;">Two-stage retrieval and ranking (FAISS → XGBoost / two-tower) with an LLM re-rank and explanation layer — offline evals on NDCG/recall, a simulated A/B harness, and drift monitoring.</p>
+      </article>
+      <article class="project">
+        <div class="project-name" style="font-size:0.98rem;">Multi-agent system in LangGraph</div>
+        <p class="project-desc" style="margin-top:0.5rem;">Specialized agents with tool use, state management, an eval suite, and tracing — built with production trappings, not a demo.</p>
+      </article>
+    </div>
+
+    <div class="repo-strip">
+      <a href="https://github.com/aniruddh996/image-steganalayiss-CNN" target="_blank" rel="noopener">image steganalysis — CNN</a>
+      <a href="https://github.com/aniruddh996/Panic-disorder-classification" target="_blank" rel="noopener">panic disorder classification</a>
+      <a href="https://github.com/aniruddh996" target="_blank" rel="noopener">→ all repos on GitHub</a>
+    </div>
+  </section>
+
+  <section class="block" id="education">
+    <div class="block-head">
+      <h2>Education</h2>
+      <span class="count mono">2024 — 2026</span>
+    </div>
+    <div class="edu-card">
+      <div>
+        <div class="role-title">MS, Data Science</div>
+        <div class="role-org" style="margin-top:0.2rem;">The George Washington University</div>
+        <div class="role-loc">Columbian College of Arts and Sciences · Washington, DC</div>
+        <div class="coursework"><b>Coursework —</b> Cloud Computing, Data Mining, Machine Learning, Data Visualization</div>
+      </div>
+      <div class="role-when">AUG 2024 – MAY 2026</div>
+    </div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="block-head">
+      <h2>Skills</h2>
+      <span class="count mono">4 categories</span>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <span class="eyebrow">Languages &amp; Frameworks</span>
+        <div class="tags">
+          <span>Python</span><span>SQL</span><span>PyTorch</span><span>TensorFlow</span><span>Scikit-learn</span><span>Pandas</span><span>NumPy</span><span>FastAPI</span><span>Flask</span><span>Streamlit</span><span>spaCy</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="eyebrow">AI / ML &amp; GenAI</span>
+        <div class="tags">
+          <span>Recommendation Systems</span><span>Ranking &amp; Personalization</span><span>Experimentation &amp; A/B Testing</span><span>Generative AI</span><span>LLMs</span><span>RAG</span><span>Deep Learning</span><span>NLP</span><span>Applied Research</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="eyebrow">MLOps &amp; Cloud</span>
+        <div class="tags">
+          <span>AWS SageMaker</span><span>Lambda</span><span>API Gateway</span><span>S3</span><span>IAM</span><span>EC2</span><span>GCP</span><span>Docker</span><span>MLflow</span><span>Real-time Inference</span><span>Serverless</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="eyebrow">Data &amp; Tools</span>
+        <div class="tags">
+          <span>MySQL</span><span>MongoDB</span><span>Elasticsearch</span><span>Git</span><span>GitHub</span><span>Power BI</span><span>Tableau</span><span>Plotly</span><span>Matplotlib</span><span>Jupyter</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="shell">
+    <h2>Let's talk about what you're building.</h2>
+    <p>Open to full-time machine learning and data science roles — recommendation systems, ranking, applied GenAI, and everything it takes to keep a model good after it ships.</p>
+    <div class="contact-row">
+      <a class="primary" href="mailto:aniruddhrajagopal9@gmail.com">✉ Email me</a>
+      <a class="secondary" href="https://www.linkedin.com/in/aniruddhrajagopal/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="secondary" href="https://github.com/aniruddh996" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+    <div class="foot-meta">
+      <span>WASHINGTON, DC · OPEN TO RELOCATION</span>
+      <span>LAST BUILT 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var canvas = document.getElementById('graph');
+  var ctx = canvas.getContext('2d');
+  var hero = canvas.parentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W, H, nodes = [];
+  var NODE_COUNT = 34;
+  var LINK_DIST = 130;
+
+  function styleColor(varName){
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+
+  function resize(){
+    var rect = hero.getBoundingClientRect();
+    W = canvas.width = rect.width * devicePixelRatio;
+    H = canvas.height = rect.height * devicePixelRatio;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+  }
+
+  function init(){
+    nodes = [];
+    for(var i=0;i<NODE_COUNT;i++){
+      nodes.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        vx: (Math.random()-0.5)*0.15*devicePixelRatio,
+        vy: (Math.random()-0.5)*0.15*devicePixelRatio,
+        r: (Math.random()*1.6+1)*devicePixelRatio
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var node = styleColor('--node');
+    var edge = styleColor('--edge');
+    for(var i=0;i<nodes.length;i++){
+      var a = nodes[i];
+      for(var j=i+1;j<nodes.length;j++){
+        var b = nodes[j];
+        var dx=a.x-b.x, dy=a.y-b.y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        var maxDist = LINK_DIST*devicePixelRatio;
+        if(dist<maxDist){
+          ctx.strokeStyle = edge;
+          ctx.globalAlpha = 1 - dist/maxDist;
+          ctx.lineWidth = devicePixelRatio;
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = node;
+    for(i=0;i<nodes.length;i++){
+      var n = nodes[i];
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function step(){
+    for(var i=0;i<nodes.length;i++){
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    }
+    draw();
+    if(!reduce) requestAnimationFrame(step);
+  }
+
+  try{
+    resize();
+    init();
+    draw();
+    if(!reduce) requestAnimationFrame(step);
+    window.addEventListener('resize', function(){ resize(); init(); draw(); });
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
